@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Korean with Dita — Session 1</title>
+<meta name="theme-color" content="#990011" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="favicon.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<style>
+  :root {
+    --cherry: #990011;
+    --dark-cherry: #5C000A;
+    --navy: #2F3C7E;
+    --off: #FCF6F5;
+    --muted: #6B6B6B;
+    --pink-bg: #FBEAEA;
+    --blue-bg: #E7ECF7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--off);
+    color: #2B2B2B;
+    padding-bottom: 72px;
+  }
+  header {
+    background: var(--cherry);
+    color: var(--off);
+    padding: 20px 20px 16px;
+    text-align: center;
+  }
+  header .tag { font-size: 11px; letter-spacing: 2px; opacity: 0.85; font-weight: bold; }
+  header h1 { font-family: Georgia, serif; font-size: 24px; margin: 4px 0 2px; }
+  header .sub { font-size: 13px; opacity: 0.85; font-style: italic; }
+  main { max-width: 480px; margin: 0 auto; padding: 16px; }
+  section { display: none; }
+  section.active { display: block; }
+  h2 { font-family: Georgia, serif; color: var(--cherry); font-size: 20px; margin: 20px 0 10px; }
+  h2:first-child { margin-top: 4px; }
+  p { line-height: 1.55; font-size: 15px; }
+  .callout {
+    background: var(--blue-bg);
+    border: 1px solid #C9D3EE;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--navy);
+    margin: 12px 0;
+  }
+  .callout b { display: block; margin-bottom: 4px; color: var(--navy); }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 18px; font-size: 13px; }
+  th { background: var(--blue-bg); color: var(--navy); text-align: left; padding: 8px; font-size: 12px; }
+  td { padding: 8px; border-bottom: 1px solid #eee; vertical-align: top; }
+  td.letter { font-family: Georgia, serif; font-size: 22px; font-weight: bold; color: var(--navy); text-align: center; width: 20%; }
+  td.sound { font-style: italic; color: var(--muted); width: 22%; }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 20px; }
+  .grid.cons { grid-template-columns: repeat(4, 1fr); }
+  .card {
+    border: 1px solid #e2d5d6;
+    border-radius: 10px;
+    padding: 14px 4px;
+    text-align: center;
+    cursor: pointer;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: bold;
+    color: #2B2B2B;
+    user-select: none;
+  }
+  .card.flipped { background: var(--blue-bg); color: var(--navy); font-size: 13px; font-family: -apple-system, sans-serif; font-weight: normal; }
+  .greet-card {
+    border: 1px solid #e2d5d6;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 8px;
+    background: #fff;
+    font-family: Georgia, serif;
+    font-size: 19px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .greet-card.flipped { background: var(--blue-bg); color: var(--navy); font-size: 14px; font-family: -apple-system, sans-serif; font-weight: normal; }
+  .quiz-box { background: #fff; border: 1px solid #e2d5d6; border-radius: 12px; padding: 20px; text-align: center; }
+  .quiz-letter { font-family: Georgia, serif; font-size: 48px; font-weight: bold; margin-bottom: 4px; }
+  .quiz-progress { font-size: 12px; color: #999; margin-bottom: 14px; }
+  input[type="text"] {
+    width: 100%; max-width: 220px; text-align: center; padding: 10px;
+    border: 1px solid #ccc; border-radius: 8px; font-size: 16px; margin-bottom: 8px;
+  }
+  .quiz-error { font-size: 13px; color: var(--cherry); min-height: 18px; margin-bottom: 4px; }
+  .quiz-feedback { font-size: 14px; font-weight: bold; min-height: 20px; margin-bottom: 10px; }
+  button {
+    background: var(--navy); color: #fff; border: none; border-radius: 8px;
+    padding: 10px 18px; font-size: 14px; font-weight: bold; cursor: pointer;
+  }
+  button.secondary { background: var(--cherry); }
+  .quiz-score { font-size: 12px; color: #777; margin-top: 14px; }
+  nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #fff; border-top: 1px solid #e2d5d6;
+    display: flex; padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+    max-width: 480px; margin: 0 auto;
+  }
+  nav button {
+    flex: 1; background: none; color: var(--muted); font-size: 11px; font-weight: normal;
+    padding: 8px 2px; border-radius: 8px;
+  }
+  nav button.active { color: var(--cherry); font-weight: bold; background: var(--pink-bg); }
+  .blocks-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px; }
+  .block-item { text-align: center; flex: 0 0 auto; }
+  .block-item .b { font-family: Georgia, serif; font-size: 26px; font-weight: bold; color: var(--cherry); background: #F7F2F2; border-radius: 8px; padding: 8px 12px; }
+  .block-item .r { font-size: 11px; color: var(--muted); font-style: italic; }
+  .hangul-mark { font-family: Georgia, serif; font-size: 60px; font-weight: bold; color: var(--cherry); text-align: center; margin: 8px 0 16px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tag">KOREAN WITH DITA</div>
+  <h1>Session 1</h1>
+  <div class="sub">An Introduction to Hangul</div>
+</header>
+
+<main>
+
+  <section id="history" class="active">
+    <div class="hangul-mark">한글</div>
+    <h2>A short history of Hangul</h2>
+    <p>Before the 1440s, Korea had no writing system of its own. Educated Koreans wrote using Chinese characters — a system that took years to master and was, in practice, only available to the elite.</p>
+    <p>In 1443, King Sejong the Great set out to change that. He commissioned a new alphabet designed specifically to be learned quickly by ordinary people, regardless of their level of education. It was completed that year and published in 1446 in a document called Hunminjeongeum, meaning "The Correct Sounds for the Instruction of the People."</p>
+    <p>Unlike most alphabets, Hangul is featural: the shape of each consonant is based on the position of the tongue, lips, or throat when making that sound. Vowels are built from simple strokes representing the earth, standing man, and the heavens.</p>
+    <div class="callout"><b>Why this matters for you</b>Because Hangul was designed to be learned quickly, most beginners can sound out any word within their first one or two classes — long before they understand what it means. That's the goal for today.</div>
+  </section>
+
+  <section id="letters">
+    <h2>The 10 basic vowels</h2>
+    <table>
+      <tr><th>Letter</th><th>Sound</th><th>How it's written</th></tr>
+      <tr><td class="letter">ㅏ</td><td class="sound">a</td><td>Vertical line, short stroke pointing right.</td></tr>
+      <tr><td class="letter">ㅓ</td><td class="sound">eo</td><td>Vertical line, short stroke pointing left.</td></tr>
+      <tr><td class="letter">ㅗ</td><td class="sound">o</td><td>Horizontal line, short stroke pointing up.</td></tr>
+      <tr><td class="letter">ㅜ</td><td class="sound">u</td><td>Horizontal line, short stroke pointing down.</td></tr>
+      <tr><td class="letter">ㅡ</td><td class="sound">eu</td><td>A single flat horizontal line.</td></tr>
+      <tr><td class="letter">ㅣ</td><td class="sound">i</td><td>A single straight vertical line.</td></tr>
+      <tr><td class="letter">ㅑ</td><td class="sound">ya</td><td>Same as ㅏ, with a second stroke added.</td></tr>
+      <tr><td class="letter">ㅕ</td><td class="sound">yeo</td><td>Same as ㅓ, with a second stroke added.</td></tr>
+      <tr><td class="letter">ㅛ</td><td class="sound">yo</td><td>Same as ㅗ, with a second stroke added.</td></tr>
+      <tr><td class="letter">ㅠ</td><td class="sound">yu</td><td>Same as ㅜ, with a second stroke added.</td></tr>
+    </table>
+    <div class="callout"><b>Placement rule</b>Vertical-line vowels sit to the RIGHT of a consonant. Horizontal-line vowels sit BELOW a consonant.</div>
+
+    <h2>The 8 basic consonants</h2>
+    <table>
+      <tr><th>Letter</th><th>Sound</th><th>How it's written</th></tr>
+      <tr><td class="letter">ㄱ</td><td class="sound">g/k</td><td>One bent stroke, like a right angle.</td></tr>
+      <tr><td class="letter">ㄴ</td><td class="sound">n</td><td>One bent stroke shaped like an L.</td></tr>
+      <tr><td class="letter">ㄷ</td><td class="sound">d/t</td><td>A horizontal stroke, then a bent stroke below.</td></tr>
+      <tr><td class="letter">ㄹ</td><td class="sound">r/l</td><td>A zig-zag of three connected strokes.</td></tr>
+      <tr><td class="letter">ㅁ</td><td class="sound">m</td><td>A closed square, four strokes.</td></tr>
+      <tr><td class="letter">ㅂ</td><td class="sound">b/p</td><td>Two vertical strokes joined by two horizontal ones.</td></tr>
+      <tr><td class="letter">ㅅ</td><td class="sound">s</td><td>Two strokes meeting at a peak.</td></tr>
+      <tr><td class="letter">ㅇ</td><td class="sound">silent/ng</td><td>A circle. Silent when it starts a block.</td></tr>
+    </table>
+
+    <h2>Building a syllable block</h2>
+    <p>Consonant + Vowel = Syllable Block. For example, ㄱ (g) + ㅏ (a) = 가 ("ga"). Try these:</p>
+    <div class="blocks-row">
+      <div class="block-item"><div class="b">나</div><div class="r">na</div></div>
+      <div class="block-item"><div class="b">다</div><div class="r">da</div></div>
+      <div class="block-item"><div class="b">마</div><div class="r">ma</div></div>
+      <div class="block-item"><div class="b">사</div><div class="r">sa</div></div>
+      <div class="block-item"><div class="b">아</div><div class="r">a</div></div>
+    </div>
+
+    <h2>Three greetings</h2>
+    <table>
+      <tr><th>Korean</th><th>Meaning</th></tr>
+      <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">안녕하세요</td><td>Hello</td></tr>
+      <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">감사합니다</td><td>Thank you</td></tr>
+      <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">죄송합니다</td><td>Sorry / excuse me</td></tr>
+    </table>
+  </section>
+
+  <section id="flashcards">
+    <h2>Vowels — tap to flip</h2>
+    <div class="grid" id="vowel-grid"></div>
+    <h2>Consonants — tap to flip</h2>
+    <div class="grid cons" id="cons-grid"></div>
+    <h2>Greetings — tap to flip</h2>
+    <div id="greet-grid"></div>
+  </section>
+
+  <section id="quiz">
+    <h2>Quick quiz</h2>
+    <p style="margin-top:-6px; color:var(--muted); font-size:13px;">Type the sound for each letter</p>
+    <div class="quiz-box">
+      <div class="quiz-letter" id="quiz-letter">ㅏ</div>
+      <div class="quiz-progress" id="quiz-progress">1 of 18</div>
+      <input id="quiz-input" type="text" placeholder="type the sound" autocomplete="off" autocapitalize="off" />
+      <div class="quiz-error" id="quiz-error"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div style="display:flex; gap:8px; justify-content:center;">
+        <button id="quiz-check">Check</button>
+        <button id="quiz-next" class="secondary" style="display:none;">Next →</button>
+      </div>
+      <div class="quiz-score" id="quiz-score">Score: 0 / 0</div>
+    </div>
+  </section>
+
+</main>
+
+<nav>
+  <button data-target="history" class="active">History</button>
+  <button data-target="letters">Letters</button>
+  <button data-target="flashcards">Flashcards</button>
+  <button data-target="quiz">Quiz</button>
+</nav>
+
+<script>
+  document.querySelectorAll("nav button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("nav button").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll("main section").forEach((s) => s.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.target).classList.add("active");
+      window.scrollTo(0, 0);
+    });
+  });
+
+  const vowels = [["ㅏ","a"],["ㅓ","eo"],["ㅗ","o"],["ㅜ","u"],["ㅡ","eu"],["ㅣ","i"],["ㅑ","ya"],["ㅕ","yeo"],["ㅛ","yo"],["ㅠ","yu"]];
+  const cons = [["ㄱ","g/k"],["ㄴ","n"],["ㄷ","d/t"],["ㄹ","r/l"],["ㅁ","m"],["ㅂ","b/p"],["ㅅ","s"],["ㅇ","-/ng"]];
+  const greetings = [["안녕하세요","hello (an-nyeong-ha-se-yo)"],["감사합니다","thank you (gam-sa-ham-ni-da)"],["죄송합니다","sorry / excuse me (joe-song-ham-ni-da)"]];
+
+  function buildFlipGrid(containerId, data) {
+    const el = document.getElementById(containerId);
+    data.forEach(([letter, sound]) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.textContent = letter;
+      let flipped = false;
+      card.addEventListener("click", () => {
+        flipped = !flipped;
+        card.textContent = flipped ? sound : letter;
+        card.classList.toggle("flipped", flipped);
+      });
+      el.appendChild(card);
+    });
+  }
+  buildFlipGrid("vowel-grid", vowels);
+  buildFlipGrid("cons-grid", cons);
+
+  const greetEl = document.getElementById("greet-grid");
+  greetings.forEach(([kr, en]) => {
+    const card = document.createElement("div");
+    card.className = "greet-card";
+    card.textContent = kr;
+    let flipped = false;
+    card.addEventListener("click", () => {
+      flipped = !flipped;
+      card.textContent = flipped ? en : kr;
+      card.classList.toggle("flipped", flipped);
+    });
+    greetEl.appendChild(card);
+  });
+
+  const quizItems = [...vowels, ...cons].sort(() => Math.random() - 0.5);
+  let qIdx = 0, correct = 0, answered = 0, checked = false;
+  const letterEl = document.getElementById("quiz-letter");
+  const progEl = document.getElementById("quiz-progress");
+  const inputEl = document.getElementById("quiz-input");
+  const errEl = document.getElementById("quiz-error");
+  const fbEl = document.getElementById("quiz-feedback");
+  const checkBtn = document.getElementById("quiz-check");
+  const nextBtn = document.getElementById("quiz-next");
+  const scoreEl = document.getElementById("quiz-score");
+
+  function showQuiz() {
+    letterEl.textContent = quizItems[qIdx][0];
+    progEl.textContent = (qIdx + 1) + " of " + quizItems.length;
+    inputEl.value = "";
+    errEl.textContent = "";
+    fbEl.textContent = "";
+    checked = false;
+    checkBtn.style.display = "";
+    nextBtn.style.display = "none";
+    inputEl.disabled = false;
+  }
+  function normalize(s) { return s.toLowerCase().replace(/[^a-z]/g, ""); }
+  checkBtn.addEventListener("click", () => {
+    const val = inputEl.value.trim();
+    if (!val) { errEl.textContent = "Type an answer first"; return; }
+    errEl.textContent = "";
+    const correctAnswers = quizItems[qIdx][1].split("/").map(normalize);
+    const isRight = correctAnswers.includes(normalize(val));
+    answered++;
+    if (isRight) { correct++; fbEl.textContent = "Correct!"; fbEl.style.color = "#0f6e56"; }
+    else { fbEl.textContent = 'Not quite — it\'s "' + quizItems[qIdx][1] + '"'; fbEl.style.color = "#990011"; }
+    scoreEl.textContent = "Score: " + correct + " / " + answered;
+    checked = true;
+    checkBtn.style.display = "none";
+    nextBtn.style.display = "";
+    inputEl.disabled = true;
+  });
+  inputEl.addEventListener("input", () => { if (errEl.textContent) errEl.textContent = ""; });
+  inputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { if (!checked) checkBtn.click(); else nextBtn.click(); }
+  });
+  nextBtn.addEventListener("click", () => {
+    qIdx = (qIdx + 1) % quizItems.length;
+    if (qIdx === 0) quizItems.sort(() => Math.random() - 0.5);
+    showQuiz();
+  });
+  showQuiz();
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("service-worker.js").catch(() => {});
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "Korean with Dita — Session 1",
+  "short_name": "KwD Session 1",
+  "description": "Learn Hangul: history, letters, flashcards, and quiz for Session 1",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FCF6F5",
+  "theme_color": "#990011",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
