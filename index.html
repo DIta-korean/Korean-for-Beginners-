@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Korean with Dita — Session 1</title>
+<title>Korean with Dita</title>
 <meta name="theme-color" content="#990011" />
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" href="favicon.png" />
@@ -31,16 +31,25 @@
   header {
     background: var(--cherry);
     color: var(--off);
-    padding: 20px 20px 16px;
+    padding: 18px 20px 14px;
     text-align: center;
+    position: relative;
   }
-  header .tag { font-size: 11px; letter-spacing: 2px; opacity: 0.85; font-weight: bold; }
-  header h1 { font-family: Georgia, serif; font-size: 24px; margin: 4px 0 2px; }
-  header .sub { font-size: 13px; opacity: 0.85; font-style: italic; }
+  header .tag { font-size: 11px; letter-spacing: 2px; opacity: 0.85; font-weight: bold; pointer-events: none; }
+  header h1 { font-family: Georgia, serif; font-size: 22px; margin: 4px 0 2px; pointer-events: none; }
+  header .sub { font-size: 13px; opacity: 0.85; font-style: italic; pointer-events: none; }
+  header .back-btn {
+    position: absolute; left: 12px; top: 16px; z-index: 5;
+    background: rgba(255,255,255,0.15); color: var(--off);
+    border: none; border-radius: 8px; padding: 6px 10px; font-size: 12px; cursor: pointer;
+    pointer-events: auto;
+  }
   main { max-width: 480px; margin: 0 auto; padding: 16px; }
-  section { display: none; }
-  section.active { display: block; }
-  h2 { font-family: Georgia, serif; color: var(--cherry); font-size: 20px; margin: 20px 0 10px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .week-tab-section { display: none; }
+  .week-tab-section.active { display: block; }
+  h2 { font-family: Georgia, serif; color: var(--cherry); font-size: 19px; margin: 20px 0 10px; }
   h2:first-child { margin-top: 4px; }
   p { line-height: 1.55; font-size: 15px; }
   .callout {
@@ -56,14 +65,15 @@
   table { width: 100%; border-collapse: collapse; margin: 10px 0 18px; font-size: 13px; }
   th { background: var(--blue-bg); color: var(--navy); text-align: left; padding: 8px; font-size: 12px; }
   td { padding: 8px; border-bottom: 1px solid #eee; vertical-align: top; }
-  td.letter { font-family: Georgia, serif; font-size: 22px; font-weight: bold; color: var(--navy); text-align: center; width: 20%; }
+  td.letter { font-family: Georgia, serif; font-size: 20px; font-weight: bold; color: var(--navy); text-align: center; width: 20%; }
   td.sound { font-style: italic; color: var(--muted); width: 22%; }
-  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px; }
   .grid.cons { grid-template-columns: repeat(4, 1fr); }
+  .grid.wide { grid-template-columns: repeat(3, 1fr); }
   .card {
     border: 1px solid #e2d5d6;
     border-radius: 10px;
-    padding: 14px 4px;
+    padding: 12px 4px;
     text-align: center;
     cursor: pointer;
     min-height: 54px;
@@ -72,26 +82,17 @@
     justify-content: center;
     background: #fff;
     font-family: Georgia, serif;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
     color: #2B2B2B;
     user-select: none;
+    line-height: 1.2;
   }
-  .card.flipped { background: var(--blue-bg); color: var(--navy); font-size: 13px; font-family: -apple-system, sans-serif; font-weight: normal; }
-  .greet-card {
-    border: 1px solid #e2d5d6;
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 8px;
-    background: #fff;
-    font-family: Georgia, serif;
-    font-size: 19px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  .greet-card.flipped { background: var(--blue-bg); color: var(--navy); font-size: 14px; font-family: -apple-system, sans-serif; font-weight: normal; }
+  .card.flipped { background: var(--blue-bg); color: var(--navy); font-size: 12px; font-family: -apple-system, sans-serif; font-weight: normal; }
+  .flash-group-title { font-size: 13px; font-weight: bold; color: var(--navy); margin: 16px 0 6px; }
+  .flash-group-title:first-child { margin-top: 0; }
   .quiz-box { background: #fff; border: 1px solid #e2d5d6; border-radius: 12px; padding: 20px; text-align: center; }
-  .quiz-letter { font-family: Georgia, serif; font-size: 48px; font-weight: bold; margin-bottom: 4px; }
+  .quiz-letter { font-family: Georgia, serif; font-size: 40px; font-weight: bold; margin-bottom: 4px; word-break: break-word; }
   .quiz-progress { font-size: 12px; color: #999; margin-bottom: 14px; }
   input[type="text"] {
     width: 100%; max-width: 220px; text-align: center; padding: 10px;
@@ -118,162 +119,455 @@
   nav button.active { color: var(--cherry); font-weight: bold; background: var(--pink-bg); }
   .blocks-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px; }
   .block-item { text-align: center; flex: 0 0 auto; }
-  .block-item .b { font-family: Georgia, serif; font-size: 26px; font-weight: bold; color: var(--cherry); background: #F7F2F2; border-radius: 8px; padding: 8px 12px; }
+  .block-item .b { font-family: Georgia, serif; font-size: 24px; font-weight: bold; color: var(--cherry); background: #F7F2F2; border-radius: 8px; padding: 8px 12px; }
   .block-item .r { font-size: 11px; color: var(--muted); font-style: italic; }
-  .hangul-mark { font-family: Georgia, serif; font-size: 60px; font-weight: bold; color: var(--cherry); text-align: center; margin: 8px 0 16px; }
+  .hangul-mark { font-family: Georgia, serif; font-size: 54px; font-weight: bold; color: var(--cherry); text-align: center; margin: 8px 0 16px; }
+
+  /* Home screen week cards */
+  .week-card {
+    display: flex; align-items: center; gap: 14px;
+    border: 1px solid #e2d5d6; border-radius: 12px; padding: 14px;
+    margin-bottom: 12px; background: #fff; cursor: pointer;
+  }
+  .week-card .num {
+    flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-family: Georgia, serif; font-weight: bold; font-size: 18px;
+  }
+  .week-card .txt .t { font-weight: bold; font-size: 15px; color: #2B2B2B; }
+  .week-card .txt .s { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .intro-note { font-size: 13px; color: var(--muted); text-align: center; margin: 14px 0 20px; }
 </style>
 </head>
 <body>
 
 <header>
+  <button class="back-btn" id="home-btn" style="display:none;">← All Weeks</button>
   <div class="tag">KOREAN WITH DITA</div>
-  <h1>Session 1</h1>
-  <div class="sub">An Introduction to Hangul</div>
+  <h1 id="header-title">4-Week Beginner Course</h1>
+  <div class="sub" id="header-sub">Pick a week to get started</div>
 </header>
 
 <main>
 
-  <section id="history" class="active">
+  <!-- HOME SCREEN -->
+  <div class="screen active" id="screen-home">
     <div class="hangul-mark">한글</div>
-    <h2>A short history of Hangul</h2>
-    <p>Before the 1440s, Korea had no writing system of its own. Educated Koreans wrote using Chinese characters — a system that took years to master and was, in practice, only available to the elite.</p>
-    <p>In 1443, King Sejong the Great set out to change that. He commissioned a new alphabet designed specifically to be learned quickly by ordinary people, regardless of their level of education. It was completed that year and published in 1446 in a document called Hunminjeongeum, meaning "The Correct Sounds for the Instruction of the People."</p>
-    <p>Unlike most alphabets, Hangul is featural: the shape of each consonant is based on the position of the tongue, lips, or throat when making that sound. Vowels are built from simple strokes representing the earth, standing man, and the heavens.</p>
-    <div class="callout"><b>Why this matters for you</b>Because Hangul was designed to be learned quickly, most beginners can sound out any word within their first one or two classes — long before they understand what it means. That's the goal for today.</div>
-  </section>
+    <p class="intro-note">Four weeks, eight sessions, from your first letter to your first real conversations. Tap a week to begin.</p>
 
-  <section id="letters">
-    <h2>The 10 basic vowels</h2>
-    <table>
-      <tr><th>Letter</th><th>Sound</th><th>How it's written</th></tr>
-      <tr><td class="letter">ㅏ</td><td class="sound">a</td><td>Vertical line, short stroke pointing right.</td></tr>
-      <tr><td class="letter">ㅓ</td><td class="sound">eo</td><td>Vertical line, short stroke pointing left.</td></tr>
-      <tr><td class="letter">ㅗ</td><td class="sound">o</td><td>Horizontal line, short stroke pointing up.</td></tr>
-      <tr><td class="letter">ㅜ</td><td class="sound">u</td><td>Horizontal line, short stroke pointing down.</td></tr>
-      <tr><td class="letter">ㅡ</td><td class="sound">eu</td><td>A single flat horizontal line.</td></tr>
-      <tr><td class="letter">ㅣ</td><td class="sound">i</td><td>A single straight vertical line.</td></tr>
-      <tr><td class="letter">ㅑ</td><td class="sound">ya</td><td>Same as ㅏ, with a second stroke added.</td></tr>
-      <tr><td class="letter">ㅕ</td><td class="sound">yeo</td><td>Same as ㅓ, with a second stroke added.</td></tr>
-      <tr><td class="letter">ㅛ</td><td class="sound">yo</td><td>Same as ㅗ, with a second stroke added.</td></tr>
-      <tr><td class="letter">ㅠ</td><td class="sound">yu</td><td>Same as ㅜ, with a second stroke added.</td></tr>
-    </table>
-    <div class="callout"><b>Placement rule</b>Vertical-line vowels sit to the RIGHT of a consonant. Horizontal-line vowels sit BELOW a consonant.</div>
-
-    <h2>The 8 basic consonants</h2>
-    <table>
-      <tr><th>Letter</th><th>Sound</th><th>How it's written</th></tr>
-      <tr><td class="letter">ㄱ</td><td class="sound">g/k</td><td>One bent stroke, like a right angle.</td></tr>
-      <tr><td class="letter">ㄴ</td><td class="sound">n</td><td>One bent stroke shaped like an L.</td></tr>
-      <tr><td class="letter">ㄷ</td><td class="sound">d/t</td><td>A horizontal stroke, then a bent stroke below.</td></tr>
-      <tr><td class="letter">ㄹ</td><td class="sound">r/l</td><td>A zig-zag of three connected strokes.</td></tr>
-      <tr><td class="letter">ㅁ</td><td class="sound">m</td><td>A closed square, four strokes.</td></tr>
-      <tr><td class="letter">ㅂ</td><td class="sound">b/p</td><td>Two vertical strokes joined by two horizontal ones.</td></tr>
-      <tr><td class="letter">ㅅ</td><td class="sound">s</td><td>Two strokes meeting at a peak.</td></tr>
-      <tr><td class="letter">ㅇ</td><td class="sound">silent/ng</td><td>A circle. Silent when it starts a block.</td></tr>
-    </table>
-
-    <h2>Building a syllable block</h2>
-    <p>Consonant + Vowel = Syllable Block. For example, ㄱ (g) + ㅏ (a) = 가 ("ga"). Try these:</p>
-    <div class="blocks-row">
-      <div class="block-item"><div class="b">나</div><div class="r">na</div></div>
-      <div class="block-item"><div class="b">다</div><div class="r">da</div></div>
-      <div class="block-item"><div class="b">마</div><div class="r">ma</div></div>
-      <div class="block-item"><div class="b">사</div><div class="r">sa</div></div>
-      <div class="block-item"><div class="b">아</div><div class="r">a</div></div>
+    <div class="week-card" data-week="w1">
+      <div class="num" style="background:var(--cherry);">1</div>
+      <div class="txt"><div class="t">Week 1 — Hangul Basics</div><div class="s">History, vowels, consonants, greetings</div></div>
     </div>
+    <div class="week-card" data-week="w2">
+      <div class="num" style="background:var(--navy);">2</div>
+      <div class="txt"><div class="t">Week 2 — Reading Fluency</div><div class="s">Batchim, numbers, self-introduction</div></div>
+    </div>
+    <div class="week-card" data-week="w3">
+      <div class="num" style="background:var(--cherry);">3</div>
+      <div class="txt"><div class="t">Week 3 — Simple Communication</div><div class="s">Verbs, vocabulary, question words</div></div>
+    </div>
+    <div class="week-card" data-week="w4">
+      <div class="num" style="background:var(--navy);">4</div>
+      <div class="txt"><div class="t">Week 4 — Practical Korean</div><div class="s">Numbers, shopping phrases, review</div></div>
+    </div>
+  </div>
 
-    <h2>Three greetings</h2>
-    <table>
-      <tr><th>Korean</th><th>Meaning</th></tr>
-      <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">안녕하세요</td><td>Hello</td></tr>
-      <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">감사합니다</td><td>Thank you</td></tr>
-      <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">죄송합니다</td><td>Sorry / excuse me</td></tr>
-    </table>
-  </section>
+  <!-- WEEK SCREEN (shared shell; content swapped by tab) -->
+  <div class="screen" id="screen-week">
 
-  <section id="flashcards">
-    <h2>Vowels — tap to flip</h2>
-    <div class="grid" id="vowel-grid"></div>
-    <h2>Consonants — tap to flip</h2>
-    <div class="grid cons" id="cons-grid"></div>
-    <h2>Greetings — tap to flip</h2>
-    <div id="greet-grid"></div>
-  </section>
+    <!-- WEEK 1 LEARN -->
+    <div class="week-tab-section" id="w1-learn">
+      <h2>A short history of Hangul</h2>
+      <p>Before the 1440s, Korea had no writing system of its own. In 1443, King Sejong the Great commissioned a new alphabet designed to be learned quickly by ordinary people. It was published in 1446 in the Hunminjeongeum — "The Correct Sounds for the Instruction of the People."</p>
+      <p>Hangul is featural: each consonant's shape reflects the position of the tongue, lips, or throat when making that sound.</p>
+      <div class="callout"><b>Why this matters for you</b>Most beginners can sound out any word within their first class — long before they understand what it means. That's the goal for today.</div>
 
-  <section id="quiz">
-    <h2>Quick quiz</h2>
-    <p style="margin-top:-6px; color:var(--muted); font-size:13px;">Type the sound for each letter</p>
-    <div class="quiz-box">
-      <div class="quiz-letter" id="quiz-letter">ㅏ</div>
-      <div class="quiz-progress" id="quiz-progress">1 of 18</div>
-      <input id="quiz-input" type="text" placeholder="type the sound" autocomplete="off" autocapitalize="off" />
-      <div class="quiz-error" id="quiz-error"></div>
-      <div class="quiz-feedback" id="quiz-feedback"></div>
-      <div style="display:flex; gap:8px; justify-content:center;">
-        <button id="quiz-check">Check</button>
-        <button id="quiz-next" class="secondary" style="display:none;">Next →</button>
+      <h2>The 10 basic vowels</h2>
+      <table>
+        <tr><th>Letter</th><th>Sound</th><th>How it's written</th></tr>
+        <tr><td class="letter">ㅏ</td><td class="sound">a</td><td>Vertical line, short stroke pointing right.</td></tr>
+        <tr><td class="letter">ㅓ</td><td class="sound">eo</td><td>Vertical line, short stroke pointing left.</td></tr>
+        <tr><td class="letter">ㅗ</td><td class="sound">o</td><td>Horizontal line, short stroke pointing up.</td></tr>
+        <tr><td class="letter">ㅜ</td><td class="sound">u</td><td>Horizontal line, short stroke pointing down.</td></tr>
+        <tr><td class="letter">ㅡ</td><td class="sound">eu</td><td>A single flat horizontal line.</td></tr>
+        <tr><td class="letter">ㅣ</td><td class="sound">i</td><td>A single straight vertical line.</td></tr>
+        <tr><td class="letter">ㅑ</td><td class="sound">ya</td><td>Same as ㅏ, with a second stroke added.</td></tr>
+        <tr><td class="letter">ㅕ</td><td class="sound">yeo</td><td>Same as ㅓ, with a second stroke added.</td></tr>
+        <tr><td class="letter">ㅛ</td><td class="sound">yo</td><td>Same as ㅗ, with a second stroke added.</td></tr>
+        <tr><td class="letter">ㅠ</td><td class="sound">yu</td><td>Same as ㅜ, with a second stroke added.</td></tr>
+      </table>
+      <div class="callout"><b>Placement rule</b>Vertical-line vowels sit to the RIGHT of a consonant. Horizontal-line vowels sit BELOW a consonant.</div>
+
+      <h2>The 8 basic consonants</h2>
+      <table>
+        <tr><th>Letter</th><th>Sound</th><th>How it's written</th></tr>
+        <tr><td class="letter">ㄱ</td><td class="sound">g/k</td><td>One bent stroke, like a right angle.</td></tr>
+        <tr><td class="letter">ㄴ</td><td class="sound">n</td><td>One bent stroke shaped like an L.</td></tr>
+        <tr><td class="letter">ㄷ</td><td class="sound">d/t</td><td>A horizontal stroke, then a bent stroke below.</td></tr>
+        <tr><td class="letter">ㄹ</td><td class="sound">r/l</td><td>A zig-zag of three connected strokes.</td></tr>
+        <tr><td class="letter">ㅁ</td><td class="sound">m</td><td>A closed square, four strokes.</td></tr>
+        <tr><td class="letter">ㅂ</td><td class="sound">b/p</td><td>Two vertical strokes joined by two horizontal ones.</td></tr>
+        <tr><td class="letter">ㅅ</td><td class="sound">s</td><td>Two strokes meeting at a peak.</td></tr>
+        <tr><td class="letter">ㅇ</td><td class="sound">silent/ng</td><td>A circle. Silent when it starts a block.</td></tr>
+      </table>
+
+      <h2>Building a syllable block</h2>
+      <p>Consonant + Vowel = Syllable Block. For example, ㄱ (g) + ㅏ (a) = 가 ("ga"). Try these:</p>
+      <div class="blocks-row">
+        <div class="block-item"><div class="b">나</div><div class="r">na</div></div>
+        <div class="block-item"><div class="b">다</div><div class="r">da</div></div>
+        <div class="block-item"><div class="b">마</div><div class="r">ma</div></div>
+        <div class="block-item"><div class="b">사</div><div class="r">sa</div></div>
+        <div class="block-item"><div class="b">아</div><div class="r">a</div></div>
       </div>
-      <div class="quiz-score" id="quiz-score">Score: 0 / 0</div>
+
+      <h2>Three greetings</h2>
+      <table>
+        <tr><th>Korean</th><th>Meaning</th></tr>
+        <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">안녕하세요</td><td>Hello</td></tr>
+        <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">감사합니다</td><td>Thank you</td></tr>
+        <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">죄송합니다</td><td>Sorry / excuse me</td></tr>
+      </table>
     </div>
-  </section>
+
+    <!-- WEEK 2 LEARN -->
+    <div class="week-tab-section" id="w2-learn">
+      <p>This week you'll finish the Hangul alphabet, learn to read real words with batchim (final consonants), count from 1 to 10, and introduce yourself in Korean.</p>
+
+      <h2>6 more consonants</h2>
+      <table>
+        <tr><th>Letter</th><th>Sound</th><th>How it's written</th></tr>
+        <tr><td class="letter">ㅈ</td><td class="sound">j</td><td>Like ㅅ with an extra stroke on top.</td></tr>
+        <tr><td class="letter">ㅊ</td><td class="sound">ch</td><td>Like ㅈ with an extra stroke — an aspirated "j."</td></tr>
+        <tr><td class="letter">ㅋ</td><td class="sound">k</td><td>Like ㄱ with an extra stroke — an aspirated "g."</td></tr>
+        <tr><td class="letter">ㅌ</td><td class="sound">t</td><td>Like ㄷ with an extra stroke — an aspirated "d."</td></tr>
+        <tr><td class="letter">ㅍ</td><td class="sound">p</td><td>Like ㅂ with two extra strokes on top.</td></tr>
+        <tr><td class="letter">ㅎ</td><td class="sound">h</td><td>A circle with a small hat and a line above.</td></tr>
+      </table>
+
+      <h2>Double consonants</h2>
+      <p>Tensed versions of the base consonant — pronounced with more tension and no puff of air.</p>
+      <table>
+        <tr><th>Letter</th><th>Sound</th><th>Base letter</th></tr>
+        <tr><td class="letter">ㄲ</td><td class="sound">kk</td><td>Doubled ㄱ</td></tr>
+        <tr><td class="letter">ㄸ</td><td class="sound">tt</td><td>Doubled ㄷ</td></tr>
+        <tr><td class="letter">ㅃ</td><td class="sound">pp</td><td>Doubled ㅂ</td></tr>
+        <tr><td class="letter">ㅆ</td><td class="sound">ss</td><td>Doubled ㅅ</td></tr>
+        <tr><td class="letter">ㅉ</td><td class="sound">jj</td><td>Doubled ㅈ</td></tr>
+      </table>
+
+      <h2>Compound vowels</h2>
+      <p>These 11 vowels complete the alphabet — each is a combination of two basic vowels you already know.</p>
+      <table>
+        <tr><th>Letter</th><th>Sound</th><th>How it's formed</th></tr>
+        <tr><td class="letter">ㅐ</td><td class="sound">ae</td><td>ㅏ + ㅣ</td></tr>
+        <tr><td class="letter">ㅔ</td><td class="sound">e</td><td>ㅓ + ㅣ</td></tr>
+        <tr><td class="letter">ㅒ</td><td class="sound">yae</td><td>ㅑ + ㅣ</td></tr>
+        <tr><td class="letter">ㅖ</td><td class="sound">ye</td><td>ㅕ + ㅣ</td></tr>
+        <tr><td class="letter">ㅘ</td><td class="sound">wa</td><td>ㅗ + ㅏ</td></tr>
+        <tr><td class="letter">ㅙ</td><td class="sound">wae</td><td>ㅗ + ㅐ</td></tr>
+        <tr><td class="letter">ㅚ</td><td class="sound">oe</td><td>ㅗ + ㅣ</td></tr>
+        <tr><td class="letter">ㅝ</td><td class="sound">wo</td><td>ㅜ + ㅓ</td></tr>
+        <tr><td class="letter">ㅞ</td><td class="sound">we</td><td>ㅜ + ㅔ</td></tr>
+        <tr><td class="letter">ㅟ</td><td class="sound">wi</td><td>ㅜ + ㅣ</td></tr>
+        <tr><td class="letter">ㅢ</td><td class="sound">ui</td><td>ㅡ + ㅣ</td></tr>
+      </table>
+      <div class="callout"><b>Good to know</b>In everyday spoken Korean, ㅐ and ㅔ sound almost identical for most speakers — and ㅙ, ㅚ, ㅞ often blend together too. Don't worry about hearing the difference perfectly yet.</div>
+
+      <h2>Batchim — final consonants</h2>
+      <p>Batchim sits underneath a syllable block, closing out the sound. For example, 안 (an) = ㅇ + ㅏ + ㄴ.</p>
+      <table>
+        <tr><th>Word</th><th>Romanization</th><th>Meaning</th></tr>
+        <tr><td class="letter">산</td><td class="sound">san</td><td>mountain</td></tr>
+        <tr><td class="letter">밥</td><td class="sound">bap</td><td>rice / meal</td></tr>
+        <tr><td class="letter">손</td><td class="sound">son</td><td>hand</td></tr>
+        <tr><td class="letter">물</td><td class="sound">mul</td><td>water</td></tr>
+      </table>
+
+      <h2>Numbers 1–10 (Sino-Korean)</h2>
+      <p>Used for dates, money, phone numbers, and counting minutes.</p>
+      <table>
+        <tr><th>Letter</th><th>Number</th><th>Romanization</th></tr>
+        <tr><td class="letter">일</td><td>1</td><td class="sound">il</td></tr>
+        <tr><td class="letter">이</td><td>2</td><td class="sound">i</td></tr>
+        <tr><td class="letter">삼</td><td>3</td><td class="sound">sam</td></tr>
+        <tr><td class="letter">사</td><td>4</td><td class="sound">sa</td></tr>
+        <tr><td class="letter">오</td><td>5</td><td class="sound">o</td></tr>
+        <tr><td class="letter">육</td><td>6</td><td class="sound">yuk</td></tr>
+        <tr><td class="letter">칠</td><td>7</td><td class="sound">chil</td></tr>
+        <tr><td class="letter">팔</td><td>8</td><td class="sound">pal</td></tr>
+        <tr><td class="letter">구</td><td>9</td><td class="sound">gu</td></tr>
+        <tr><td class="letter">십</td><td>10</td><td class="sound">sip</td></tr>
+      </table>
+
+      <h2>Introducing yourself</h2>
+      <div class="callout"><b>저는 [이름]이에요 / 예요</b>"I am [name]." Use 이에요 after a name ending in a consonant, 예요 after a name ending in a vowel. Example: 저는 다나예요 (I'm Dana).</div>
+      <div class="callout"><b>이다 / 아니다 — to be / not to be</b>저는 학생이에요 (I'm a student) · 저는 선생님이 아니에요 (I'm not a teacher)</div>
+      <div class="callout"><b>있다 / 없다 — have / don't have</b>저는 시간이 있어요 (I have time) · 저는 시간이 없어요 (I don't have time)</div>
+
+      <h2>First particles</h2>
+      <table>
+        <tr><th>Particle</th><th>Use</th></tr>
+        <tr><td class="letter">은/는</td><td>Topic marker — 은 after a consonant, 는 after a vowel.</td></tr>
+        <tr><td class="letter">이/가</td><td>Subject marker — 이 after a consonant, 가 after a vowel.</td></tr>
+      </table>
+    </div>
+
+    <!-- WEEK 3 LEARN -->
+    <div class="week-tab-section" id="w3-learn">
+      <p>This week is all about simple communication — present-tense verbs, everyday vocabulary, and how to ask questions.</p>
+
+      <h2>Present tense verbs (해요체)</h2>
+      <table>
+        <tr><th>Dictionary form</th><th>해요체</th><th>Meaning</th></tr>
+        <tr><td class="letter">가다</td><td class="sound">가요</td><td>go</td></tr>
+        <tr><td class="letter">오다</td><td class="sound">와요</td><td>come</td></tr>
+        <tr><td class="letter">먹다</td><td class="sound">먹어요</td><td>eat</td></tr>
+        <tr><td class="letter">하다</td><td class="sound">해요</td><td>do</td></tr>
+        <tr><td class="letter">보다</td><td class="sound">봐요</td><td>see / watch</td></tr>
+      </table>
+
+      <h2>Everyday vocabulary</h2>
+      <table>
+        <tr><th>Korean</th><th>Meaning</th></tr>
+        <tr><td class="letter">밥</td><td>rice / meal</td></tr>
+        <tr><td class="letter">물</td><td>water</td></tr>
+        <tr><td class="letter">학교</td><td>school</td></tr>
+        <tr><td class="letter">집</td><td>house</td></tr>
+        <tr><td class="letter">친구</td><td>friend</td></tr>
+        <tr><td class="letter">커피</td><td>coffee</td></tr>
+      </table>
+
+      <h2>Question words</h2>
+      <table>
+        <tr><th>Korean</th><th>Meaning</th></tr>
+        <tr><td class="letter">뭐</td><td>what</td></tr>
+        <tr><td class="letter">어디</td><td>where</td></tr>
+        <tr><td class="letter">언제</td><td>when</td></tr>
+        <tr><td class="letter">누구</td><td>who</td></tr>
+        <tr><td class="letter">왜</td><td>why</td></tr>
+      </table>
+      <div class="callout"><b>Examples</b>이게 뭐예요? (What is this?) · 어디 가요? (Where are you going?)</div>
+    </div>
+
+    <!-- WEEK 4 LEARN -->
+    <div class="week-tab-section" id="w4-learn">
+      <p>Your final week — native Korean numbers for counting, everyday shopping phrases, and a full review of everything so far.</p>
+
+      <h2>Numbers 1–10 (Native Korean)</h2>
+      <p>Used for counting objects, age, and hours — different from the Sino-Korean numbers you learned in Week 2.</p>
+      <table>
+        <tr><th>Letter</th><th>Romanization</th></tr>
+        <tr><td class="letter">하나</td><td class="sound">hana</td></tr>
+        <tr><td class="letter">둘</td><td class="sound">dul</td></tr>
+        <tr><td class="letter">셋</td><td class="sound">set</td></tr>
+        <tr><td class="letter">넷</td><td class="sound">net</td></tr>
+        <tr><td class="letter">다섯</td><td class="sound">daseot</td></tr>
+        <tr><td class="letter">여섯</td><td class="sound">yeoseot</td></tr>
+        <tr><td class="letter">일곱</td><td class="sound">ilgop</td></tr>
+        <tr><td class="letter">여덟</td><td class="sound">yeodeol</td></tr>
+        <tr><td class="letter">아홉</td><td class="sound">ahop</td></tr>
+        <tr><td class="letter">열</td><td class="sound">yeol</td></tr>
+      </table>
+      <div class="callout"><b>Counters</b>Korean uses counter words with numbers — 개 counts general objects. Example: 사과 두 개 (two apples).</div>
+
+      <h2>Shopping & food phrases</h2>
+      <table>
+        <tr><th>Korean</th><th>Meaning</th></tr>
+        <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">이거 주세요</td><td>This one, please</td></tr>
+        <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">얼마예요?</td><td>How much is it?</td></tr>
+        <tr><td style="font-family:Georgia,serif; font-size:15px; font-weight:bold; color:var(--navy); white-space:nowrap;">하나 주세요</td><td>One, please</td></tr>
+      </table>
+
+      <h2>You made it — full review</h2>
+      <p>Over 4 weeks you've covered:</p>
+      <div class="callout">✓ All 14 basic consonants + 5 double consonants<br>✓ All 10 vowels<br>✓ Batchim and real-word reading<br>✓ Two number systems (Sino-Korean and Native)<br>✓ Self-introductions, 이다/아니다, 있다/없다<br>✓ Present-tense verbs and everyday vocabulary<br>✓ Question words and shopping phrases</div>
+      <p style="text-align:center; font-style:italic; color:var(--muted);">수고하셨습니다 — congratulations on finishing the course!</p>
+    </div>
+
+    <!-- FLASHCARDS (shared, populated by JS) -->
+    <div class="week-tab-section" id="tab-flashcards">
+      <div id="flashcards-mount"></div>
+    </div>
+
+    <!-- QUIZ (shared, populated by JS) -->
+    <div class="week-tab-section" id="tab-quiz">
+      <h2>Quick quiz</h2>
+      <p style="margin-top:-6px; color:var(--muted); font-size:13px;" id="quiz-instructions">Type the sound for each letter</p>
+      <div class="quiz-box">
+        <div class="quiz-letter" id="quiz-letter">ㅏ</div>
+        <div class="quiz-progress" id="quiz-progress">1 of 18</div>
+        <input id="quiz-input" type="text" placeholder="type your answer" autocomplete="off" autocapitalize="off" />
+        <div class="quiz-error" id="quiz-error"></div>
+        <div class="quiz-feedback" id="quiz-feedback"></div>
+        <div style="display:flex; gap:8px; justify-content:center;">
+          <button id="quiz-check">Check</button>
+          <button id="quiz-next" class="secondary" style="display:none;">Next →</button>
+        </div>
+        <div class="quiz-score" id="quiz-score">Score: 0 / 0</div>
+      </div>
+    </div>
+
+  </div>
 
 </main>
 
 <nav>
-  <button data-target="history" class="active">History</button>
-  <button data-target="letters">Letters</button>
-  <button data-target="flashcards">Flashcards</button>
-  <button data-target="quiz">Quiz</button>
+  <button data-nav="home" class="active">Home</button>
+  <button data-nav="learn">Learn</button>
+  <button data-nav="flashcards">Flashcards</button>
+  <button data-nav="quiz">Quiz</button>
 </nav>
 
 <script>
+  // ---------- DATA ----------
+  const weekData = {
+    w1: {
+      title: "Week 1 — Hangul Basics",
+      flashcardGroups: [
+        { title: "Vowels", items: [["ㅏ","a"],["ㅓ","eo"],["ㅗ","o"],["ㅜ","u"],["ㅡ","eu"],["ㅣ","i"],["ㅑ","ya"],["ㅕ","yeo"],["ㅛ","yo"],["ㅠ","yu"]] },
+        { title: "Consonants", items: [["ㄱ","g/k"],["ㄴ","n"],["ㄷ","d/t"],["ㄹ","r/l"],["ㅁ","m"],["ㅂ","b/p"],["ㅅ","s"],["ㅇ","-/ng"]] },
+        { title: "Greetings", items: [["안녕하세요","hello"],["감사합니다","thank you"],["죄송합니다","sorry / excuse me"]] },
+      ],
+      quizPool: [["ㅏ","a"],["ㅓ","eo"],["ㅗ","o"],["ㅜ","u"],["ㅡ","eu"],["ㅣ","i"],["ㅑ","ya"],["ㅕ","yeo"],["ㅛ","yo"],["ㅠ","yu"],
+                 ["ㄱ","g/k"],["ㄴ","n"],["ㄷ","d/t"],["ㄹ","r/l"],["ㅁ","m"],["ㅂ","b/p"],["ㅅ","s"],["ㅇ","ng"]],
+    },
+    w2: {
+      title: "Week 2 — Reading Fluency",
+      flashcardGroups: [
+        { title: "New Consonants", items: [["ㅈ","j"],["ㅊ","ch"],["ㅋ","k"],["ㅌ","t"],["ㅍ","p"],["ㅎ","h"]] },
+        { title: "Double Consonants", items: [["ㄲ","kk"],["ㄸ","tt"],["ㅃ","pp"],["ㅆ","ss"],["ㅉ","jj"]] },
+        { title: "Compound Vowels", items: [["ㅐ","ae"],["ㅔ","e"],["ㅒ","yae"],["ㅖ","ye"],["ㅘ","wa"],["ㅙ","wae"],["ㅚ","oe"],["ㅝ","wo"],["ㅞ","we"],["ㅟ","wi"],["ㅢ","ui"]] },
+        { title: "Batchim Words", items: [["산","mountain (san)"],["밥","rice/meal (bap)"],["손","hand (son)"],["물","water (mul)"]] },
+        { title: "Numbers 1–10", items: [["일","1 · il"],["이","2 · i"],["삼","3 · sam"],["사","4 · sa"],["오","5 · o"],["육","6 · yuk"],["칠","7 · chil"],["팔","8 · pal"],["구","9 · gu"],["십","10 · sip"]] },
+      ],
+      quizPool: [["ㅈ","j"],["ㅊ","ch"],["ㅋ","k"],["ㅌ","t"],["ㅍ","p"],["ㅎ","h"],
+                 ["ㄲ","kk"],["ㄸ","tt"],["ㅃ","pp"],["ㅆ","ss"],["ㅉ","jj"],
+                 ["ㅐ","ae"],["ㅔ","e"],["ㅒ","yae"],["ㅖ","ye"],["ㅘ","wa"],["ㅙ","wae"],["ㅚ","oe"],["ㅝ","wo"],["ㅞ","we"],["ㅟ","wi"],["ㅢ","ui"],
+                 ["일","il"],["이","i"],["삼","sam"],["사","sa"],["오","o"],["육","yuk"],["칠","chil"],["팔","pal"],["구","gu"],["십","sip"]],
+    },
+    w3: {
+      title: "Week 3 — Simple Communication",
+      flashcardGroups: [
+        { title: "Verbs (해요체)", items: [["가다","go (가요)"],["오다","come (와요)"],["먹다","eat (먹어요)"],["하다","do (해요)"],["보다","see (봐요)"]] },
+        { title: "Vocabulary", items: [["밥","rice/meal"],["물","water"],["학교","school"],["집","house"],["친구","friend"],["커피","coffee"]] },
+        { title: "Question Words", items: [["뭐","what"],["어디","where"],["언제","when"],["누구","who"],["왜","why"]] },
+      ],
+      quizPool: [["밥","rice/meal"],["물","water"],["학교","school"],["집","house"],["친구","friend"],["커피","coffee"],
+                 ["뭐","what"],["어디","where"],["언제","when"],["누구","who"],["왜","why"]],
+    },
+    w4: {
+      title: "Week 4 — Practical Korean",
+      flashcardGroups: [
+        { title: "Native Numbers 1–10", items: [["하나","hana"],["둘","dul"],["셋","set"],["넷","net"],["다섯","daseot"],["여섯","yeoseot"],["일곱","ilgop"],["여덟","yeodeol"],["아홉","ahop"],["열","yeol"]] },
+        { title: "Shopping Phrases", items: [["이거 주세요","this one, please"],["얼마예요?","how much is it?"],["하나 주세요","one, please"]] },
+      ],
+      quizPool: [["하나","hana"],["둘","dul"],["셋","set"],["넷","net"],["다섯","daseot"],["여섯","yeoseot"],["일곱","ilgop"],["여덟","yeodeol"],["아홉","ahop"],["열","yeol"]],
+    },
+  };
+
+  // ---------- STATE ----------
+  let currentScreen = "home"; // 'home' | 'week'
+  let currentWeek = "w1";
+  let currentTab = "learn"; // 'learn' | 'flashcards' | 'quiz'
+
+  const headerTitle = document.getElementById("header-title");
+  const headerSub = document.getElementById("header-sub");
+  const homeBtn = document.getElementById("home-btn");
+
+  function render() {
+    document.getElementById("screen-home").classList.toggle("active", currentScreen === "home");
+    document.getElementById("screen-week").classList.toggle("active", currentScreen === "week");
+
+    document.querySelectorAll(".week-tab-section").forEach((el) => el.classList.remove("active"));
+    if (currentScreen === "week") {
+      if (currentTab === "learn") {
+        document.getElementById(currentWeek + "-learn").classList.add("active");
+      } else if (currentTab === "flashcards") {
+        document.getElementById("tab-flashcards").classList.add("active");
+        renderFlashcards(currentWeek);
+      } else if (currentTab === "quiz") {
+        document.getElementById("tab-quiz").classList.add("active");
+        initQuiz(currentWeek);
+      }
+    }
+
+    document.querySelectorAll("nav button").forEach((b) => b.classList.remove("active"));
+    if (currentScreen === "home") {
+      document.querySelector('nav button[data-nav="home"]').classList.add("active");
+      headerTitle.textContent = "4-Week Beginner Course";
+      headerSub.textContent = "Pick a week to get started";
+      homeBtn.style.display = "none";
+    } else {
+      document.querySelector('nav button[data-nav="' + currentTab + '"]').classList.add("active");
+      headerTitle.textContent = "Korean with Dita";
+      headerSub.textContent = weekData[currentWeek].title;
+      homeBtn.style.display = "";
+    }
+    window.scrollTo(0, 0);
+  }
+
+  document.querySelectorAll(".week-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      currentWeek = card.dataset.week;
+      currentScreen = "week";
+      currentTab = "learn";
+      render();
+    });
+  });
+
+  homeBtn.addEventListener("click", () => {
+    currentScreen = "home";
+    render();
+  });
+
   document.querySelectorAll("nav button").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll("nav button").forEach((b) => b.classList.remove("active"));
-      document.querySelectorAll("main section").forEach((s) => s.classList.remove("active"));
-      btn.classList.add("active");
-      document.getElementById(btn.dataset.target).classList.add("active");
-      window.scrollTo(0, 0);
+      const target = btn.dataset.nav;
+      if (target === "home") {
+        currentScreen = "home";
+      } else {
+        currentScreen = "week";
+        currentTab = target;
+      }
+      render();
     });
   });
 
-  const vowels = [["ㅏ","a"],["ㅓ","eo"],["ㅗ","o"],["ㅜ","u"],["ㅡ","eu"],["ㅣ","i"],["ㅑ","ya"],["ㅕ","yeo"],["ㅛ","yo"],["ㅠ","yu"]];
-  const cons = [["ㄱ","g/k"],["ㄴ","n"],["ㄷ","d/t"],["ㄹ","r/l"],["ㅁ","m"],["ㅂ","b/p"],["ㅅ","s"],["ㅇ","-/ng"]];
-  const greetings = [["안녕하세요","hello (an-nyeong-ha-se-yo)"],["감사합니다","thank you (gam-sa-ham-ni-da)"],["죄송합니다","sorry / excuse me (joe-song-ham-ni-da)"]];
+  // ---------- FLASHCARDS (dynamic) ----------
+  function renderFlashcards(weekId) {
+    const mount = document.getElementById("flashcards-mount");
+    mount.innerHTML = "";
+    const groups = weekData[weekId].flashcardGroups;
+    groups.forEach((group) => {
+      const title = document.createElement("div");
+      title.className = "flash-group-title";
+      title.textContent = group.title + " — tap to flip";
+      mount.appendChild(title);
 
-  function buildFlipGrid(containerId, data) {
-    const el = document.getElementById(containerId);
-    data.forEach(([letter, sound]) => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.textContent = letter;
-      let flipped = false;
-      card.addEventListener("click", () => {
-        flipped = !flipped;
-        card.textContent = flipped ? sound : letter;
-        card.classList.toggle("flipped", flipped);
+      const grid = document.createElement("div");
+      grid.className = "grid" + (group.items.length <= 6 ? " wide" : group.items[0][0].length > 1 && group.items.length <= 6 ? " wide" : "");
+      if (group.items.some((it) => it[0].length > 2)) grid.className = "grid wide";
+      mount.appendChild(grid);
+
+      group.items.forEach(([letter, sound]) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.textContent = letter;
+        let flipped = false;
+        card.addEventListener("click", () => {
+          flipped = !flipped;
+          card.textContent = flipped ? sound : letter;
+          card.classList.toggle("flipped", flipped);
+        });
+        grid.appendChild(card);
       });
-      el.appendChild(card);
     });
   }
-  buildFlipGrid("vowel-grid", vowels);
-  buildFlipGrid("cons-grid", cons);
 
-  const greetEl = document.getElementById("greet-grid");
-  greetings.forEach(([kr, en]) => {
-    const card = document.createElement("div");
-    card.className = "greet-card";
-    card.textContent = kr;
-    let flipped = false;
-    card.addEventListener("click", () => {
-      flipped = !flipped;
-      card.textContent = flipped ? en : kr;
-      card.classList.toggle("flipped", flipped);
-    });
-    greetEl.appendChild(card);
-  });
-
-  const quizItems = [...vowels, ...cons].sort(() => Math.random() - 0.5);
+  // ---------- QUIZ (dynamic) ----------
+  let quizItems = [];
   let qIdx = 0, correct = 0, answered = 0, checked = false;
   const letterEl = document.getElementById("quiz-letter");
   const progEl = document.getElementById("quiz-progress");
@@ -283,7 +577,16 @@
   const checkBtn = document.getElementById("quiz-check");
   const nextBtn = document.getElementById("quiz-next");
   const scoreEl = document.getElementById("quiz-score");
+  let lastQuizWeek = null;
 
+  function initQuiz(weekId) {
+    if (weekId !== lastQuizWeek) {
+      quizItems = [...weekData[weekId].quizPool].sort(() => Math.random() - 0.5);
+      qIdx = 0; correct = 0; answered = 0;
+      lastQuizWeek = weekId;
+    }
+    showQuiz();
+  }
   function showQuiz() {
     letterEl.textContent = quizItems[qIdx][0];
     progEl.textContent = (qIdx + 1) + " of " + quizItems.length;
@@ -294,6 +597,7 @@
     checkBtn.style.display = "";
     nextBtn.style.display = "none";
     inputEl.disabled = false;
+    scoreEl.textContent = "Score: " + correct + " / " + answered;
   }
   function normalize(s) { return s.toLowerCase().replace(/[^a-z]/g, ""); }
   checkBtn.addEventListener("click", () => {
@@ -301,7 +605,7 @@
     if (!val) { errEl.textContent = "Type an answer first"; return; }
     errEl.textContent = "";
     const correctAnswers = quizItems[qIdx][1].split("/").map(normalize);
-    const isRight = correctAnswers.includes(normalize(val));
+    const isRight = correctAnswers.some((a) => a && normalize(val) === a);
     answered++;
     if (isRight) { correct++; fbEl.textContent = "Correct!"; fbEl.style.color = "#0f6e56"; }
     else { fbEl.textContent = 'Not quite — it\'s "' + quizItems[qIdx][1] + '"'; fbEl.style.color = "#990011"; }
@@ -320,7 +624,8 @@
     if (qIdx === 0) quizItems.sort(() => Math.random() - 0.5);
     showQuiz();
   });
-  showQuiz();
+
+  render();
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {

@@ -1,7 +1,7 @@
 {
-  "name": "Korean with Dita — Session 1",
-  "short_name": "KwD Session 1",
-  "description": "Learn Hangul: history, letters, flashcards, and quiz for Session 1",
+  "name": "Korean with Dita — 4 Week Course",
+  "short_name": "Korean w Dita",
+  "description": "Learn Hangul over 4 weeks: history, letters, grammar, flashcards, and quizzes",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
